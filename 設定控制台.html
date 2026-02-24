@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>LINE Monitor — 設定控制台</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f2ee;
+  --s1:#faf8f5;
+  --s2:#eceae6;
+  --border:#d8d4ce;
+  --border2:#c8c3bb;
+  --acc:#1a1a1a;
+  --acc2:#2d6a4f;
+  --acc3:#e76f51;
+  --text:#1a1a1a;
+  --dim:#7a7570;
+  --muted:#b0aba4;
+  --sans:'Noto Sans TC',sans-serif;
+  --display:'Syne',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  min-height:100vh;
+}
+
+/* Subtle texture */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+
+/* Header */
+.header{margin-bottom:48px;}
+.header-top{
+  display:flex;align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:8px;
+}
+.title{
+  font-family:var(--display);
+  font-size:36px;font-weight:800;
+  letter-spacing:-1px;line-height:1;
+  color:var(--acc);
+}
+.title span{color:var(--acc2);}
+.subtitle{
+  font-size:13px;color:var(--dim);
+  margin-top:8px;line-height:1.6;
+}
+.ver-badge{
+  background:var(--acc);color:#fff;
+  border-radius:4px;padding:4px 10px;
+  font-family:var(--display);font-size:11px;
+  font-weight:700;letter-spacing:1px;
+  margin-top:4px;
+}
+.divider{
+  height:2px;
+  background:linear-gradient(90deg,var(--acc),transparent);
+  margin-top:20px;opacity:.15;
+}
+
+/* Cards */
+.card{
+  background:var(--s1);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:24px;
+  margin-bottom:16px;
+}
+.card-title{
+  font-family:var(--display);
+  font-size:13px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--dim);
+  margin-bottom:20px;
+  padding-bottom:14px;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.card-title-icon{
+  width:28px;height:28px;
+  background:var(--s2);
+  border:1px solid var(--border);
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+}
+
+/* Form fields */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.field-label{
+  font-size:12px;font-weight:500;
+  color:var(--dim);margin-bottom:6px;
+  letter-spacing:.5px;
+}
+.field-input{
+  width:100%;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:11px 14px;
+  color:var(--text);
+  font-family:var(--sans);font-size:13px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.field-input:focus{
+  border-color:var(--acc2);
+  box-shadow:0 0 0 3px rgba(45,106,79,0.08);
+}
+.field-input::placeholder{color:var(--muted);}
+.field-hint{
+  font-size:11px;color:var(--muted);
+  margin-top:5px;line-height:1.5;
+}
+
+/* Contact chips */
+.chip-area{
+  display:flex;flex-wrap:wrap;gap:7px;
+  min-height:44px;
+  background:var(--bg);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:8px;
+  cursor:text;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--acc2);color:#fff;
+  border-radius:20px;
+  padding:4px 10px 4px 12px;
+  font-size:12px;font-weight:500;
+  animation:popIn .2s ease;
+}
+@keyframes popIn{from{transform:scale(.8);opacity:0;}to{transform:scale(1);opacity:1;}}
+.chip-del{
+  background:rgba(255,255,255,.3);
+  border:none;color:#fff;
+  width:16px;height:16px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:10px;
+  transition:background .15s;
+  flex-shrink:0;
+}
+.chip-del:hover{background:rgba(255,255,255,.5);}
+.chip-input{
+  border:none;outline:none;
+  background:transparent;
+  font-family:var(--sans);font-size:13px;
+  color:var(--text);
+  min-width:120px;flex:1;
+  padding:4px 4px;
+}
+.chip-input::placeholder{color:var(--muted);}
+.chip-hint{
+  font-size:11px;color:var(--muted);
+  margin-top:5px;
+}
+
+/* Option rows */
+.opt-row{
+  display:flex;align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+.opt-row:last-child{border-bottom:none;padding-bottom:0;}
+.opt-row:first-child{padding-top:0;}
+.opt-info{flex:1;}
+.opt-name{font-size:14px;color:var(--text);}
+.opt-desc{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4;}
+.toggle{position:relative;width:42px;height:24px;flex-shrink:0;}
+.toggle input{opacity:0;width:0;height:0;}
+.tsl{
+  position:absolute;inset:0;
+  background:var(--border2);
+  border-radius:12px;cursor:pointer;
+  transition:all .25s;
+}
+.tsl::after{
+  content:'';position:absolute;
+  top:4px;left:4px;
+  width:16px;height:16px;border-radius:50%;
+  background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.2);
+  transition:all .25s;
+}
+.toggle input:checked+.tsl{background:var(--acc2);}
+.toggle input:checked+.tsl::after{transform:translateX(18px);}
+
+/* Number inputs */
+.num-group{display:flex;align-items:center;gap:8px;}
+.num-input{
+  width:70px;
+  background:var(--bg);border:1px solid var(--border2);
+  border-radius:8px;padding:9px 12px;
+  color:var(--text);font-family:var(--sans);font-size:13px;
+  outline:none;text-align:center;
+  transition:border-color .2s;
+}
+.num-input:focus{border-color:var(--acc2);}
+.num-unit{font-size:12px;color:var(--dim);}
+
+/* Grid */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:600px){.row2{grid-template-columns:1fr;}}
+
+/* Security card */
+.sec-card{
+  background:linear-gradient(135deg,#f0faf4,#e8f5ee);
+  border:1px solid #b7dfc7;
+  border-radius:16px;padding:20px;
+  margin-bottom:16px;
+}
+.sec-title{
+  font-family:var(--display);font-size:12px;
+  font-weight:700;letter-spacing:2px;
+  text-transform:uppercase;color:var(--acc2);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-list{display:flex;flex-direction:column;gap:8px;}
+.sec-item{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;color:#2d5a43;line-height:1.5;
+}
+.sec-dot{
+  width:18px;height:18px;
+  background:var(--acc2);color:#fff;
+  border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:9px;
+  flex-shrink:0;margin-top:1px;
+}
+
+/* Action buttons */
+.btn-row{display:flex;gap:10px;margin-top:24px;}
+.btn-save{
+  background:var(--acc);color:#fff;
+  border:none;border-radius:10px;
+  padding:14px 28px;
+  font-family:var(--display);font-size:13px;
+  font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;
+  transition:all .2s;flex:1;
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+}
+.btn-save:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,.2);}
+.btn-save:active{transform:translateY(0);}
+.btn-export{
+  background:var(--s1);color:var(--dim);
+  border:1px solid var(--border2);
+  border-radius:10px;padding:14px 20px;
+  font-family:var(--display);font-size:12px;
+  font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;
+  transition:all .2s;
+}
+.btn-export:hover{border-color:var(--acc);color:var(--acc);}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:28px;left:50%;
+  transform:translateX(-50%) translateY(80px);
+  background:var(--acc);color:#fff;
+  border-radius:40px;
+  padding:12px 24px;
+  font-size:13px;font-weight:500;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;z-index:100;
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* Log viewer */
+.log-view{
+  background:#1a1a1a;
+  border-radius:10px;padding:14px;
+  font-family:'Courier New',monospace;
+  font-size:11px;line-height:1.8;
+  color:#7ec87e;
+  max-height:140px;overflow-y:auto;
+  margin-top:14px;
+}
+.log-view::-webkit-scrollbar{width:3px;}
+.log-view::-webkit-scrollbar-thumb{background:#333;border-radius:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="title">LINE<span>.</span>Monitor</div>
+        <div class="subtitle">設定控制台 — 只需在公共電腦設定一次</div>
+      </div>
+      <div class="ver-badge">v4.0</div>
+    </div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- 資安說明 -->
+  <div class="sec-card">
+    <div class="sec-title">🔒 資安保護說明</div>
+    <div class="sec-list">
+      <div class="sec-item"><div class="sec-dot">✓</div>程式背景靜默執行，工作列與視窗清單中不顯示</div>
+      <div class="sec-item"><div class="sec-dot">✓</div>訊息內容只寫入您指定的內網共用資料夾，程式碼層級封鎖外部網路連線</div>
+      <div class="sec-item"><div class="sec-dot">✓</div>所有設定儲存在本機 config.json，不上傳任何資料</div>
+      <div class="sec-item"><div class="sec-dot">✓</div>run.log 只記錄在 USB 隨身碟同目錄，不寫入電腦系統</div>
+    </div>
+  </div>
+
+  <!-- 路徑設定 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">📂</div>儲存路徑</div>
+
+    <div class="field">
+      <div class="field-label">內網共用資料夾路徑</div>
+      <input class="field-input" id="sharedPath"
+        placeholder="\\192.168.1.100\Line通知"
+        value="">
+      <div class="field-hint">兩台電腦都可以存取的內網路徑。格式：\\電腦名稱或IP\共用資料夾名稱</div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">資料夾結構</div>
+      <div style="display:flex;gap:12px;margin-top:2px;">
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;">
+          <input type="radio" name="folderMode" value="sub" id="radioSub" checked
+            style="accent-color:var(--acc2);width:14px;height:14px;">
+          依聯絡人分資料夾<span style="font-size:11px;color:var(--muted);margin-left:2px;">（王小明\ 工作群組\）</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px;">
+          <input type="radio" name="folderMode" value="flat" id="radioFlat"
+            style="accent-color:var(--acc2);width:14px;height:14px;">
+          全部放同一層
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- 監控對象 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">👥</div>監控對象</div>
+
+    <div class="field">
+      <div class="field-label">指定聯絡人／群組（留空 = 監控全部）</div>
+      <div class="chip-area" id="chipArea" onclick="focusChipInput()">
+        <input class="chip-input" id="chipInput"
+          placeholder="輸入名稱後按 Enter 或逗號新增..."
+          onkeydown="chipKeydown(event)"
+          oninput="chipInput(event)">
+      </div>
+      <div class="chip-hint">支援部分符合，例如輸入「王」可捕捉所有名字含王的聯絡人</div>
+    </div>
+  </div>
+
+  <!-- 時間設定 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">⏱</div>時間設定</div>
+
+    <div class="row2">
+      <div class="field">
+        <div class="field-label">掃描間隔</div>
+        <div class="num-group">
+          <input class="num-input" id="intervalSec" type="number" min="10" max="300" value="60">
+          <span class="num-unit">秒</span>
+        </div>
+        <div class="field-hint">建議 60 秒，太短會增加系統負擔</div>
+      </div>
+
+      <div class="field">
+        <div class="field-label">對話段落間隔</div>
+        <div class="num-group">
+          <input class="num-input" id="gapMin" type="number" min="1" max="60" value="5">
+          <span class="num-unit">分鐘</span>
+        </div>
+        <div class="field-hint">超過此時間無新訊息，下次來訊時自動分段</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 功能選項 -->
+  <div class="card">
+    <div class="card-title"><div class="card-title-icon">⚙️</div>功能選項</div>
+
+    <div class="opt-row">
+      <div class="opt-info">
+        <div class="opt-name">自動下載收到的檔案</div>
+        <div class="opt-desc">對方傳檔時複製到 收到的檔案\ 子資料夾</div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="togDl" checked><span class="tsl"></span></label>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <div class="btn-row">
+    <button class="btn-save" onclick="saveConfig()">💾 儲存設定並產生 config.json</button>
+    <button class="btn-export" onclick="viewLog()">查看 run.log</button>
+  </div>
+
+  <!-- Log viewer -->
+  <div class="log-view" id="logView" style="display:none;"></div>
+
+  <!-- 使用說明 -->
+  <div class="card" style="margin-top:16px;background:var(--s2);">
+    <div class="card-title"><div class="card-title-icon">📋</div>使用步驟</div>
+    <div style="font-size:13px;color:var(--dim);line-height:2;">
+      <strong style="color:var(--text);">Step 1</strong> — 設定好後按「儲存設定」，下載 config.json<br>
+      <strong style="color:var(--text);">Step 2</strong> — 把 config.json 放到 USB 隨身碟根目錄（與 .vbs 同層）<br>
+      <strong style="color:var(--text);">Step 3</strong> — 在公共電腦上雙擊 <code style="background:var(--border);padding:2px 6px;border-radius:4px;">【啟動監控】雙擊執行.vbs</code><br>
+      <strong style="color:var(--text);">Step 4</strong> — 完成。程式在背景靜默運作，不顯示任何視窗<br>
+      <strong style="color:var(--text);">停止時</strong> — 雙擊 <code style="background:var(--border);padding:2px 6px;border-radius:4px;">【停止監控】.vbs</code>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+  <span id="toastMsg">✓ 設定已儲存</span>
+</div>
+
+<script>
+// ─── Chips ────────────────────────────────────
+let watchList = [];
+
+function chipKeydown(e){
+  const inp = document.getElementById('chipInput');
+  if(e.key==='Enter'||e.key===','||e.key==='，'){
+    e.preventDefault();
+    addChip(inp.value);
+  } else if(e.key==='Backspace' && inp.value==='' && watchList.length>0){
+    removeChip(watchList.length-1);
+  }
+}
+
+function chipInput(e){
+  const v = e.target.value;
+  if(v.includes(',')||v.includes('，')){
+    const names = v.split(/[,，]/).map(s=>s.trim()).filter(Boolean);
+    names.forEach(addChip);
+    e.target.value='';
+  }
+}
+
+function addChip(name){
+  name = name.trim();
+  if(!name || watchList.includes(name)) return;
+  watchList.push(name);
+  renderChips();
+  document.getElementById('chipInput').value='';
+}
+
+function removeChip(i){
+  watchList.splice(i,1);
+  renderChips();
+}
+
+function renderChips(){
+  const area = document.getElementById('chipArea');
+  const inp  = document.getElementById('chipInput');
+  // remove old chips
+  area.querySelectorAll('.chip').forEach(c=>c.remove());
+  // insert new chips before input
+  watchList.forEach((name,i)=>{
+    const chip = document.createElement('div');
+    chip.className='chip';
+    chip.innerHTML=`${name}<button class="chip-del" onclick="removeChip(${i})" title="移除">✕</button>`;
+    area.insertBefore(chip, inp);
+  });
+}
+
+function focusChipInput(){
+  document.getElementById('chipInput').focus();
+}
+
+// ─── Save config ──────────────────────────────
+function saveConfig(){
+  const shared = document.getElementById('sharedPath').value.trim();
+  if(!shared){
+    showToast('⚠ 請先填入共用資料夾路徑');
+    return;
+  }
+
+  const cfg = {
+    shared_folder: shared,
+    watch_list:    watchList,
+    interval_sec:  parseInt(document.getElementById('intervalSec').value)||60,
+    gap_minutes:   parseInt(document.getElementById('gapMin').value)||5,
+    auto_dl_files: document.getElementById('togDl').checked,
+    sub_folder:    document.getElementById('radioSub').checked,
+  };
+
+  const json = JSON.stringify(cfg, null, 2);
+
+  // 下載 config.json
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([json],{type:'application/json;charset=utf-8'}));
+  a.download = 'config.json';
+  a.click();
+
+  showToast('✓ config.json 已下載，放到 USB 隨身碟即完成');
+
+  // 顯示預覽
+  document.getElementById('logView').style.display='block';
+  document.getElementById('logView').textContent = '── 設定預覽 ──\n' + json;
+}
+
+// ─── View log ─────────────────────────────────
+function viewLog(){
+  // 嘗試讀取同目錄的 run.log（只在本機執行時有效）
+  const lv = document.getElementById('logView');
+  lv.style.display = lv.style.display==='none' ? 'block' : 'none';
+  if(lv.style.display==='block' && !lv.textContent){
+    lv.textContent = '── run.log 需由 Python 腳本產生，啟動監控後在 USB 隨身碟同目錄查看 ──';
+  }
+}
+
+// ─── Toast ────────────────────────────────────
+function showToast(msg){
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
